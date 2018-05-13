@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.fatoumeh.shumanatormovieapp.MovieDetails">
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:padding="4dp"
+        style="@style/GenericMovieDetailsStyle" />
+
+    <LinearLayout
+        style="@style/horizontalLL">
+        <ImageView
+            android:id="@+id/img_movie_poster"
+            android:padding="4dp"
+            android:contentDescription="@string/movie_poster_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            style="@style/verticalLL">
+            <LinearLayout
+                style="@style/horizontalLL"
+                android:padding="4dp">
+                <TextView
+                    android:text="@string/str_release_date"
+                    android:textStyle="bold"
+                    style="@style/GenericMovieDetailsStyle" />
+                <TextView
+                    android:id="@+id/tv_release_date"
+                    android:layout_marginLeft="4dp"
+                    style="@style/GenericMovieDetailsStyle" />
+            </LinearLayout>
+            <LinearLayout
+                style="@style/horizontalLL"
+                android:padding="4dp">
+                <TextView
+                    android:text="@string/str_rating"
+                    android:textStyle="bold"
+                    style="@style/GenericMovieDetailsStyle" />
+                <TextView
+                    android:id="@+id/tv_rating"
+                    android:layout_marginLeft="4dp"
+                    style="@style/GenericMovieDetailsStyle" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        style="@style/horizontalLL">
+        <TextView
+            android:padding="4dp"
+            android:text="@string/str_synopsis"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            style="@style/GenericMovieDetailsStyle" />
+        <TextView
+            android:id="@+id/tv_overview"
+            android:padding="4dp"
+            style="@style/GenericMovieDetailsStyle" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/bt_share"
+        android:padding="4dp"
+        android:text="@string/str_share"
+        style="@style/GenericMovieDetailsStyle" />
+
+</LinearLayout>

@@ -1,0 +1,53 @@
+<resources>
+    <string name="app_name">ShumanatorMovieApp</string>
+    <string name="sort_popular">Most Popular Movies</string>
+    <string name="sort_top_rated">Top Rated Movies</string>
+
+    <!--strings for query -->
+    <string name="id">id</string>
+    <string name="original_title">original_title</string>
+    <string name="overview">overview</string>
+    <string name="vote_average">vote_average</string>
+    <string name="release_date">release_date</string>
+    <string name="poster_path">poster_path</string>
+    <string name="results">results</string>
+
+    <string name="api_key">api_key</string>
+    <string name="api_key_value">xxxSeeReadMexxx</string>
+    <string name="language">language</string>
+    <string name="language_value">en-US</string>
+    <string name="page">page</string>
+    <string name="page_value">1</string>
+
+    <string name="popular_query">popular</string>
+    <string name="rating_query">top_rated</string>
+
+    <string name="read_timeout">10000</string>
+    <string name="connect_timeout">15000</string>
+    <!--end of strings for query -->
+
+
+    <string name="movie_poster_desc">Movie poster</string>
+    <string name="share_chooser">Choose app to share movie info</string>
+
+    <!--errors logged or reported to user-->
+    <string name="connection_error">Oops! An error has occurred whilst connecting
+        to the movie db. Pls ensure your device is online.</string>
+    <string name="no_movies">Oops! No movies could be fetched.
+        Pls contact support.</string>
+    <string name="missing_details">This movie is missing core details so ignoring</string>
+    <string name="json_error">Error parsing JSON</string>
+    <string name="json_retrieve_error">Problem retrieving the movie JSON results: </string>
+    <string name="http_error">Http error. Response code: </string>
+    <string name="incorrect_query">Incorrect query type. Pls contact support</string>
+    <!--end of errors logged or reported to user-->
+
+    <!--layout strings-->
+    <string name="str_release_date">Release Date: </string>
+    <string name="str_rating">User Rating: </string>
+    <string name="str_synopsis">Synopsis: </string>
+    <string name="str_share">Share movie info</string>
+    <!--end of layout strings-->
+
+</resources>
+
