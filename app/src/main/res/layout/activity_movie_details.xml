@@ -1,23 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context="com.example.fatoumeh.shumanatormovieapp.MovieDetails">
-
     <TextView
         android:id="@+id/tv_title"
-        android:textSize="24sp"
+        android:textSize="@dimen/movie_title_text_size"
         android:textStyle="bold"
-        android:padding="4dp"
+        android:padding="@dimen/generic_padding_margic"
         style="@style/GenericMovieDetailsStyle" />
 
     <LinearLayout
         style="@style/horizontalLL">
         <ImageView
             android:id="@+id/img_movie_poster"
-            android:padding="4dp"
+            android:padding="@dimen/generic_padding_margic"
             android:contentDescription="@string/movie_poster_desc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -26,49 +25,55 @@
             style="@style/verticalLL">
             <LinearLayout
                 style="@style/horizontalLL"
-                android:padding="4dp">
+                android:padding="@dimen/generic_padding_margic">
                 <TextView
                     android:text="@string/str_release_date"
                     android:textStyle="bold"
                     style="@style/GenericMovieDetailsStyle" />
                 <TextView
                     android:id="@+id/tv_release_date"
-                    android:layout_marginLeft="4dp"
+                    android:layout_marginLeft="@dimen/generic_padding_margic"
                     style="@style/GenericMovieDetailsStyle" />
             </LinearLayout>
             <LinearLayout
                 style="@style/horizontalLL"
-                android:padding="4dp">
+                android:padding="@dimen/generic_padding_margic">
                 <TextView
                     android:text="@string/str_rating"
                     android:textStyle="bold"
                     style="@style/GenericMovieDetailsStyle" />
                 <TextView
                     android:id="@+id/tv_rating"
-                    android:layout_marginLeft="4dp"
+                    android:layout_marginLeft="@dimen/generic_padding_margic"
                     style="@style/GenericMovieDetailsStyle" />
             </LinearLayout>
+            <Button
+                android:id="@+id/bt_share"
+                android:padding="@dimen/generic_padding_margic"
+                android:text="@string/str_share"
+                style="@style/GenericMovieDetailsStyle" />
+
         </LinearLayout>
     </LinearLayout>
-
     <LinearLayout
         style="@style/horizontalLL">
         <TextView
-            android:padding="4dp"
+            android:padding="@dimen/generic_padding_margic"
             android:text="@string/str_synopsis"
-            android:textSize="16sp"
+            android:textSize="@dimen/synopsis_title_text_size"
             android:textStyle="bold"
             style="@style/GenericMovieDetailsStyle" />
-        <TextView
-            android:id="@+id/tv_overview"
-            android:padding="4dp"
-            style="@style/GenericMovieDetailsStyle" />
+
+        <!--I am deliberately putting the scrollview inside the linearlayout
+            because I want the rest of the movie content to stay put and not
+            disappear-->
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/tv_overview"
+                android:padding="@dimen/generic_padding_margic"
+                style="@style/GenericMovieDetailsStyle" />
+        </ScrollView>
     </LinearLayout>
-
-    <Button
-        android:id="@+id/bt_share"
-        android:padding="4dp"
-        android:text="@string/str_share"
-        style="@style/GenericMovieDetailsStyle" />
-
 </LinearLayout>
