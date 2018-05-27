@@ -2,5 +2,7 @@
 <resources>
     <dimen name="movie_title_text_size">24sp</dimen>
     <dimen name="synopsis_title_text_size">16sp</dimen>
+    <dimen name="review_title_text_size">24sp</dimen>
     <dimen name="generic_padding_margic">4dp</dimen>
+    <dimen name="generic_margin_margic">4dp</dimen>
 </resources>

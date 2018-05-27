@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_trailer_popup"
+    android:orientation="vertical"
+    android:background="@color/colorPrimaryLight"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
+        <TextView
+            android:padding="@dimen/generic_padding_margic"
+            android:text="@string/str_trailer"
+            android:textSize="@dimen/review_title_text_size"
+            android:textStyle="bold"
+            android:textAllCaps="true"
+            android:layout_weight="5"
+            android:layout_width="0dp"
+            style="@style/GenericMovieDetailsStyle" />
+        <ImageButton
+            android:id="@+id/bt_close_trailer"
+            android:src="@android:drawable/ic_delete"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_trailer_details"
+        android:orientation="vertical"
+        android:layout_weight="7"
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
+    </LinearLayout>
+
+</LinearLayout>

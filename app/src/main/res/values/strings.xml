@@ -1,7 +1,10 @@
 <resources>
     <string name="app_name">ShumanatorMovieApp</string>
+
+    <!--settings menu-->
     <string name="sort_popular">Most Popular Movies</string>
     <string name="sort_top_rated">Top Rated Movies</string>
+    <string name="show_favourites">Favourite Movies</string>
 
     <!--strings for query -->
     <string name="id">id</string>
@@ -11,6 +14,11 @@
     <string name="release_date">release_date</string>
     <string name="poster_path">poster_path</string>
     <string name="results">results</string>
+    <string name="review_author">author</string>
+    <string name="review_content">content</string>
+    <string name="trailer_source">site</string>
+    <string name="trailer_key">key</string>
+    <string name="trailer_type">type</string>
 
     <string name="api_key">api_key</string>
     <string name="api_key_value">xxxSeeReadMexxx</string>
@@ -18,9 +26,15 @@
     <string name="language_value">en-US</string>
     <string name="page">page</string>
     <string name="page_value">1</string>
+    <string name="trailer_youtube">YouTube</string>
+    <string name="trailer">Trailer</string>
+    <string name="youtube_link">http://youtube.com/watch?v=</string>
+    <string name="youtube_app_link">vnd.youtube:</string>
 
     <string name="popular_query">popular</string>
     <string name="rating_query">top_rated</string>
+    <string name="reviews_query">reviews</string>
+    <string name="trailers_query">videos</string>
 
     <string name="read_timeout">10000</string>
     <string name="connect_timeout">15000</string>
@@ -35,19 +49,44 @@
         to the movie db. Pls ensure your device is online.</string>
     <string name="no_movies">Oops! No movies could be fetched.
         Pls contact support.</string>
+    <string name="no_fav_movies">Oops! No favourites movies found.</string>
+    <string name="no_reviews">Oops! No reviews could be fetched for movie.
+        Pls contact support.</string>
+    <string name="part_review">Oops! Only part of the review was fetched.
+        Pls contact support.</string>
+    <string name="no_trailers">Oops! No trailers could be fetched for movie.
+        Pls contact support.</string>
     <string name="missing_details">This movie is missing core details so ignoring</string>
     <string name="json_error">Error parsing JSON</string>
     <string name="json_retrieve_error">Problem retrieving the movie JSON results: </string>
     <string name="http_error">Http error. Response code: </string>
     <string name="incorrect_query">Incorrect query type. Pls contact support</string>
+    <string name="remove_fav_error">Something went wrong, cannot remove movie from favourites. Pls contact support.</string>
+    <string name="insert_fav_error">Something went wrong, cannot add movie to favourites. Pls contact support</string>
+    <string name="insert_fav_successful">Movie added to favourites</string>
     <!--end of errors logged or reported to user-->
 
     <!--layout strings-->
     <string name="str_release_date">Release Date: </string>
     <string name="str_rating">User Rating: </string>
     <string name="str_synopsis">Synopsis: </string>
+    <string name="str_review">Review</string>
+    <string name="str_review_author">Review Author: </string>
     <string name="str_share">Share movie info</string>
+    <string name="str_get_trailer">Trailers</string>
+    <string name="str_get_review">Reviews</string>
+    <string name="str_fav_star">Mark as favourite</string>
+    <string name="str_close_review">Close review</string>
+    <string name="str_close_trailer">Close trailers</string>
+    <string name="str_trailer">Trailers</string>
     <!--end of layout strings-->
+
+    <!--db related strings-->
+    <string name="unhandled_request">Request is not supported.</string>
+    <string name="delete_unknown_uri">Unknown URI. Cannot do delete: </string>
+    <string name="insert_unknown_uri">Unknown URI. Cannot do insert: </string>
+    <string name="query_unknown_uri">Unknown URI. Cannot do query: </string>
+    <string name="unknown_uri">Unknown URI for match id: </string>
 
 </resources>
 

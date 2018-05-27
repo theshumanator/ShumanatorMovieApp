@@ -4,6 +4,7 @@
     android:id="@+id/cvPoster"
     app:cardCornerRadius="4dp"
     app:contentPadding="16dp"
+    android:foreground="@drawable/main_touch_selector_ripple"
     app:cardUseCompatPadding="true"
     app:cardPreventCornerOverlap="true"
     android:layout_width="match_parent"

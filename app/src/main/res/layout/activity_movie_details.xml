@@ -47,12 +47,26 @@
                     android:layout_marginLeft="@dimen/generic_padding_margic"
                     style="@style/GenericMovieDetailsStyle" />
             </LinearLayout>
-            <Button
-                android:id="@+id/bt_share"
-                android:padding="@dimen/generic_padding_margic"
-                android:text="@string/str_share"
-                style="@style/GenericMovieDetailsStyle" />
-
+            <ImageButton
+                android:id="@+id/img_bt_favourite"
+                android:layout_marginLeft="@dimen/generic_padding_margic"
+                android:src="@android:drawable/btn_star_big_off"
+                android:contentDescription="@string/str_fav_star"
+                style="@style/GenericMovieDetailsStyle"/>
+            <LinearLayout
+                style="@style/horizontalLL"
+                android:padding="@dimen/generic_padding_margic">
+                <Button
+                    android:id="@+id/bt_get_trailers"
+                    android:padding="@dimen/generic_padding_margic"
+                    android:text="@string/str_get_trailer"
+                    style="@style/GenericMovieDetailsStyle" />
+                <Button
+                    android:id="@+id/bt_get_review"
+                    android:padding="@dimen/generic_padding_margic"
+                    android:text="@string/str_get_review"
+                    style="@style/GenericMovieDetailsStyle" />
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
     <LinearLayout
