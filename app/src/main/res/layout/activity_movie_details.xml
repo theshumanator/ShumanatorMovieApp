@@ -4,7 +4,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.fatoumeh.shumanatormovieapp.MovieDetails">
+    tools:context="com.example.fatoumeh.shumanatormovieapp.MovieDetailsActivity">
     <TextView
         android:id="@+id/tv_title"
         android:textSize="@dimen/movie_title_text_size"

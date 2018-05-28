@@ -1,9 +1,11 @@
 package com.example.fatoumeh.shumanatormovieapp;
 
 import android.app.LoaderManager;
+import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -26,14 +28,25 @@ import utilities.QueryUtils;
 
 public class MainActivity extends AppCompatActivity implements MovieAdapterOnClickHandler, LoaderManager.LoaderCallbacks<Cursor> {
 
-    private final String LOG_TAG = this.getClass().getSimpleName();
+    private final String LOG_TAG =this.getClass().getSimpleName();
     private RecyclerView rvMovies;
     private GridLayoutManager gridLayoutManager;
     private MovieAdapter movieAdapter;
     private TextView tvError;
     private ProgressBar pbProgress;
     private Cursor cursor;
-    private int currentMenuItem;
+
+    /*
+        Note: I will not be using Parcelable as i'm only keeping track of the scroll position
+        (no objects).
+        I'm using SharedPrefs for the sorting.
+    */
+    private int scrollPos;
+    private String scrollPosKey;
+
+    private SharedPreferences sortPreferences;
+    private String sortPref;
+    private String sortKey;
 
     private final int FAVOURITE_LOADER = 2;
 
@@ -60,24 +73,39 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
         tvError = findViewById(R.id.tv_error);
         pbProgress = findViewById(R.id.pb_progress);
         rvMovies = findViewById(R.id.rvMovies);
+
         //we want two columns per row
         gridLayoutManager = new GridLayoutManager(this, 2);
         rvMovies.setLayoutManager(gridLayoutManager);
         movieAdapter = new MovieAdapter(this);
         rvMovies.setAdapter(movieAdapter);
 
+        scrollPosKey=getString(R.string.scroll_position);
+        scrollPos=0;
+        if (savedInstanceState!=null) {
+            scrollPos=savedInstanceState.getInt(scrollPosKey, 0);
+        }
+
+        sortPref = getString(R.string.sort_pref);
+        sortKey = getString(R.string.sort_key);
+        sortPreferences = getSharedPreferences(sortPref, Context.MODE_PRIVATE);
+
         //check connectivity first
         if (QueryUtils.isConnected(this)) {
             tvError.setVisibility(View.GONE);
-            //by default we sort by popularity
-            sortByPopularity();
+            if (sortPreferences.contains(sortKey)) {
+                int sortValue=sortPreferences.getInt(sortKey, R.string.sort_popular);
+                decideOnSorting(sortValue);
+            } else {
+                //by default we sort by popularity if prefs not set already
+                sortByPopularity();
+            }
         } else {
             tvError.setVisibility(View.VISIBLE);
             tvError.setText(getString(R.string.connection_error));
         }
-
-
     }
+
 
     private void sortByPopularity() {
         setTitle(R.string.sort_popular);
@@ -97,9 +125,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
         movieAdapter.setMovieData(null);
         getLoaderManager().initLoader(FAVOURITE_LOADER, null, this);
         getAllFavourites();
-
-        //fixes the back problem but favs problem persists
-        // getLoaderManager().destroyLoader(FAVOURITE_LOADER);
     }
 
     @Override
@@ -108,10 +133,32 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
         return true;
     }
 
+    private void decideOnSorting(int sortValue) {
+        switch (sortValue) {
+            case R.id.sort_popular:
+                sortByPopularity();
+                break;
+            case R.id.sort_top_rated:
+                sortByRating();
+                break;
+            case R.id.show_favourites:
+                showFavourites();
+                break;
+            default:
+                break;
+        }
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
-        currentMenuItem = itemId;
+
+        if (itemId == R.id.sort_popular || itemId == R.id.sort_top_rated
+                || itemId == R.id.show_favourites) {
+            SharedPreferences.Editor editor = sortPreferences.edit();
+            editor.putInt(sortKey, itemId);
+            editor.apply();
+            editor.commit();
+        }
         if (itemId == R.id.sort_popular) {
             sortByPopularity();
             return true;
@@ -128,7 +175,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
 
     @Override
     public void onClick(Movies movieItem) {
-        Intent intent = new Intent(MainActivity.this, MovieDetails.class);
+        Intent intent = new Intent(MainActivity.this, MovieDetailsActivity.class);
         intent.putExtra(getString(R.string.id), movieItem.getMovieId());
         intent.putExtra(getString(R.string.original_title), movieItem.getTitle());
         intent.putExtra(getString(R.string.overview), movieItem.getOverview());
@@ -179,40 +226,29 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
     }
 
     @Override
-    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        return new CursorLoader(this, FavouritesDB.CONTENT_URI, FAVOURITES_PROJECTION, null, null, null);
+    protected void onSaveInstanceState(Bundle outState) {
+        scrollPos=gridLayoutManager.findFirstVisibleItemPosition();
+        outState.putInt(scrollPosKey, scrollPos);
+        Log.d(LOG_TAG, "onSaveInstanceState " + scrollPos);
+        super.onSaveInstanceState(outState);
     }
 
-
-    /*  TODO: note to reviewer
-        I am overriding onResume so i can ensure the correct view appears again.
-        The problem I am trying to solve is the following:
-            1. open app
-            2. show fav
-            3. show top rated or popular
-            4. open a movie
-            5. set it to fav (or remove from fav)
-            6. press back from action bar
-            7. the list of movies will be the updated fav movies and NOT the previous view of
-                top rated or popular
-        *****Any tips will be appreciated.********
-     */
     @Override
     protected void onResume() {
         super.onResume();
-        switch (currentMenuItem) {
-            case R.id.sort_popular:
-                sortByPopularity();
-                break;
-            case R.id.sort_top_rated:
-                sortByRating();
-                break;
-            case R.id.show_favourites:
-                showFavourites();
-                break;
-            default:
-                sortByRating();
+        if (sortPreferences.contains(sortKey)) {
+            int sortValue=sortPreferences.getInt(sortKey, R.string.sort_popular);
+            decideOnSorting(sortValue);
         }
+        Log.d(LOG_TAG, "onResume " + scrollPos);
+        if (scrollPos!=RecyclerView.NO_POSITION) {
+            gridLayoutManager.scrollToPosition(scrollPos);
+        }
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+        return new CursorLoader(this, FavouritesDB.CONTENT_URI, FAVOURITES_PROJECTION, null, null, null);
     }
 
     @Override
@@ -251,7 +287,9 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
                 movieAdapter.setMovieData(favMovieList);
             }
         }
-        getLoaderManager().destroyLoader(FAVOURITE_LOADER);
+        if (scrollPos!=RecyclerView.NO_POSITION) {
+            gridLayoutManager.scrollToPosition(scrollPos);
+        }
     }
 
     @Override
@@ -288,6 +326,9 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
                 tvError.setVisibility(View.GONE);
                 rvMovies.setVisibility(View.VISIBLE);
                 movieAdapter.setMovieData(movies);
+                if (scrollPos!=RecyclerView.NO_POSITION) {
+                    gridLayoutManager.scrollToPosition(scrollPos);
+                }
             } else {
                 tvError.setText(getString(R.string.no_movies));
                 tvError.setVisibility(View.VISIBLE);

@@ -27,10 +27,11 @@ import java.util.Scanner;
  * Created by fatoumeh on 13/05/2018.
  */
 
-public class QueryUtils {
+public final class QueryUtils {
 
     private static final String LOG_TAG = QueryUtils.class.getSimpleName();
 
+    private QueryUtils() {}
 
     private static final String MOVIES_BASE_URL="https://api.themoviedb.org/3/movie/";
     private static  String QUERY_BRANCH;

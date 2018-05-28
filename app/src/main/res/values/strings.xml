@@ -5,6 +5,9 @@
     <string name="sort_popular">Most Popular Movies</string>
     <string name="sort_top_rated">Top Rated Movies</string>
     <string name="show_favourites">Favourite Movies</string>
+    <string name="sort_key">sortKey</string>
+    <string name="sort_pref">sortPreferences</string>
+    <string name="scroll_position">scrollPosition</string>
 
     <!--strings for query -->
     <string name="id">id</string>

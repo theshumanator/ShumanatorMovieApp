@@ -40,7 +40,7 @@ import java.util.Date;
 
 import utilities.QueryUtils;
 
-public class MovieDetails extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
+public class MovieDetailsActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
 
 
     private TextView tvTitle;
@@ -76,7 +76,7 @@ public class MovieDetails extends AppCompatActivity implements LoaderManager.Loa
             FavouritesDB.COLUMN_MOVIE_ID,
             FavouritesDB.COLUMN_MOVIE_TITLE};
 
-    public static final String LOG_TAG = MovieDetails.class.getSimpleName();
+    public static final String LOG_TAG = MovieDetailsActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -329,7 +329,7 @@ public class MovieDetails extends AppCompatActivity implements LoaderManager.Loa
         if (trailers==null || trailers.size()<1) {
             Toast.makeText(this, getString(R.string.no_trailers), Toast.LENGTH_SHORT).show();
         } else {
-            LayoutInflater inflater = (LayoutInflater) MovieDetails.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater inflater = (LayoutInflater) MovieDetailsActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View layout = inflater.inflate(R.layout.trailer_window, (ViewGroup) findViewById(R.id.ll_trailer_popup));
 
             LinearLayout llTrailerSection=layout.findViewById(R.id.ll_trailer_details);
@@ -429,7 +429,7 @@ public class MovieDetails extends AppCompatActivity implements LoaderManager.Loa
             String reviewAuthor=reviewInfo[1];
 
             try {
-                LayoutInflater inflater = (LayoutInflater) MovieDetails.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                LayoutInflater inflater = (LayoutInflater) MovieDetailsActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 View layout = inflater.inflate(R.layout.review_info, (ViewGroup) findViewById(R.id.ll_review_popup));
 
 
