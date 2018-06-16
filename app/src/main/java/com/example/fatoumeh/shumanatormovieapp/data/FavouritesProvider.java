@@ -38,7 +38,7 @@ public class FavouritesProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
-        favouritesDbHelper = new FavouritesDbHelper(getContext());
+        favouritesDbHelper = FavouritesDbHelper.getInstance(getContext());
         return true;
     }
 

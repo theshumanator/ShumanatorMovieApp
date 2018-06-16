@@ -12,8 +12,16 @@ import com.example.fatoumeh.shumanatormovieapp.data.FavouritesContract.Favourite
 
 public class FavouritesDbHelper extends SQLiteOpenHelper{
 
-    public FavouritesDbHelper(Context context){
+    private static FavouritesDbHelper favouritesDbHelper;
+
+    private FavouritesDbHelper(Context context) {
         super(context, FavouritesDB.DB_NAME, null, FavouritesDB.DB_VERSION);
+    }
+    public static FavouritesDbHelper getInstance(Context context){
+        if (favouritesDbHelper==null) {
+            favouritesDbHelper = new FavouritesDbHelper(context.getApplicationContext());
+        }
+        return favouritesDbHelper;
     }
 
     @Override

@@ -23,15 +23,21 @@ import com.example.fatoumeh.shumanatormovieapp.MovieAdapter.MovieAdapterOnClickH
 import com.example.fatoumeh.shumanatormovieapp.data.FavouritesContract.FavouritesDB;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import utilities.QueryUtils;
 
-public class MainActivity extends AppCompatActivity implements MovieAdapterOnClickHandler, LoaderManager.LoaderCallbacks<Cursor> {
+public class MainActivity extends AppCompatActivity implements //MovieAdapterOnClickHandler,
+        MovieAdapterWithRetroFit.MovieAdapterWithRetroFitOnClickHandler, LoaderManager.LoaderCallbacks<Cursor> {
 
     private final String LOG_TAG =this.getClass().getSimpleName();
     private RecyclerView rvMovies;
     private GridLayoutManager gridLayoutManager;
     private MovieAdapter movieAdapter;
+    private MovieAdapterWithRetroFit movieAdapterWithRetroFit;
     private TextView tvError;
     private ProgressBar pbProgress;
     private Cursor cursor;
@@ -77,8 +83,13 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
         //we want two columns per row
         gridLayoutManager = new GridLayoutManager(this, 2);
         rvMovies.setLayoutManager(gridLayoutManager);
-        movieAdapter = new MovieAdapter(this);
-        rvMovies.setAdapter(movieAdapter);
+
+        //movieAdapter = new MovieAdapter(this);
+        //rvMovies.setAdapter(movieAdapter);
+
+
+        movieAdapterWithRetroFit = new MovieAdapterWithRetroFit(this);
+        rvMovies.setAdapter(movieAdapterWithRetroFit);
 
         scrollPosKey=getString(R.string.scroll_position);
         scrollPos=0;
@@ -109,8 +120,27 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
 
     private void sortByPopularity() {
         setTitle(R.string.sort_popular);
-        movieAdapter.setMovieData(null);
-        new FetchMoviesTask().execute(getString(R.string.popular_query));
+        //movieAdapter.setMovieData(null);
+        //new FetchMoviesTask().execute(getString(R.string.popular_query));
+        movieAdapterWithRetroFit.setMovieData(null);
+        MovieRetroFitAPIInterface movieRetroFitAPIInterface=MovieRetroFitClient.getRetrofitInstance()
+                .create(MovieRetroFitAPIInterface.class);
+        final Call<MoviesWithRetroFit> moviesWithRetroFitCall=movieRetroFitAPIInterface
+                .getPopularMovies(getString(R.string.api_key_value));
+        moviesWithRetroFitCall.enqueue(new Callback<MoviesWithRetroFit>() {
+            @Override
+            public void onResponse(Call<MoviesWithRetroFit> call, Response<MoviesWithRetroFit> response) {
+                MoviesWithRetroFit moviesWithRetroFit=response.body();
+                ArrayList<MoviesWithRetroFit.MoviesWithRetroFitMovie> movieList=moviesWithRetroFit.getResults();
+                movieAdapterWithRetroFit.setMovieData(movieList);
+            }
+
+            @Override
+            public void onFailure(Call<MoviesWithRetroFit> call, Throwable t) {
+                Log.d("onFailure", "FAILED!" + t.getMessage());
+                moviesWithRetroFitCall.cancel();
+            }
+        });
 
     }
 
@@ -139,10 +169,10 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
                 sortByPopularity();
                 break;
             case R.id.sort_top_rated:
-                sortByRating();
+                //sortByRating();
                 break;
             case R.id.show_favourites:
-                showFavourites();
+                //showFavourites();
                 break;
             default:
                 break;
@@ -174,12 +204,14 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
     }
 
     @Override
-    public void onClick(Movies movieItem) {
+    public void onClick(MoviesWithRetroFit.MoviesWithRetroFitMovie movieItem) {
         Intent intent = new Intent(MainActivity.this, MovieDetailsActivity.class);
-        intent.putExtra(getString(R.string.id), movieItem.getMovieId());
+        //intent.putExtra(getString(R.string.id), movieItem.getMovieId());
+        intent.putExtra(getString(R.string.id), movieItem.getId());
         intent.putExtra(getString(R.string.original_title), movieItem.getTitle());
         intent.putExtra(getString(R.string.overview), movieItem.getOverview());
-        intent.putExtra(getString(R.string.poster_path), movieItem.getImage());
+        //intent.putExtra(getString(R.string.poster_path), movieItem.getImage());
+        intent.putExtra(getString(R.string.poster_path), movieItem.getPosterPath());
         intent.putExtra(getString(R.string.vote_average), movieItem.getVoteAverage());
         intent.putExtra(getString(R.string.release_date), movieItem.getReleaseDate());
         startActivity(intent);
@@ -221,8 +253,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
                 movieAdapter.setMovieData(favMovieList);
             }
         }
-
-
     }
 
     @Override
