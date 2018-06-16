@@ -8,5 +8,4 @@ More info here: https://developers.themoviedb.org/3/getting-started/introduction
 When you get your api key, insert it into the api_key_value field before running the app.
 
 
-#Branch UsingRetrofit2
-This uses Retrofit2 but is currently work in progress (one of the http queries has been migrated to this. Rest to come later).
+This branch uses Retrofit2 but is currently work in progress (one of the http queries has been migrated to this. Rest to come later).
