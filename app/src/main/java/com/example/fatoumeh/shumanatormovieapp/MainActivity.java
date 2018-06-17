@@ -144,12 +144,20 @@ public class MainActivity extends AppCompatActivity implements //MovieAdapterOnC
 
     }
 
+    /*
+        TODO: switch adapter to retrofit
+        TODO: create/call the retrofit method and remove async task
+     */
+
     private void sortByRating() {
         setTitle(R.string.sort_top_rated);
         movieAdapter.setMovieData(null);
         new FetchMoviesTask().execute(getString(R.string.rating_query));
     }
 
+    /*
+        TODO: switch to adapter to retrofit or keep db adapter separate (?)
+     */
     private void showFavourites() {
         setTitle(R.string.show_favourites);
         movieAdapter.setMovieData(null);
@@ -169,10 +177,10 @@ public class MainActivity extends AppCompatActivity implements //MovieAdapterOnC
                 sortByPopularity();
                 break;
             case R.id.sort_top_rated:
-                //sortByRating();
+                sortByRating();
                 break;
             case R.id.show_favourites:
-                //showFavourites();
+                showFavourites();
                 break;
             default:
                 break;
@@ -217,6 +225,7 @@ public class MainActivity extends AppCompatActivity implements //MovieAdapterOnC
         startActivity(intent);
     }
 
+    //TODO: switch to retrofit arraylist
     private void getAllFavourites() {
         cursor = getContentResolver().query(FavouritesDB.CONTENT_URI, FAVOURITES_PROJECTION, null, null, null);
 

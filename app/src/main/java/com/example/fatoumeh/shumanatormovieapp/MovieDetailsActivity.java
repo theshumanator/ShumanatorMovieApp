@@ -42,6 +42,7 @@ import utilities.QueryUtils;
 
 public class MovieDetailsActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
 
+    //TODO: switch to retrofit
 
     private TextView tvTitle;
     private TextView tvOverview;
