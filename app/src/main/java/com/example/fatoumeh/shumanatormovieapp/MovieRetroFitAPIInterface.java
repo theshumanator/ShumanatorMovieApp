@@ -14,6 +14,6 @@ public interface MovieRetroFitAPIInterface {
     @GET("/3/movie/popular?")
     Call<MoviesWithRetroFit> getPopularMovies(@Query("api_key") String apiKey);
 
-    @GET("/top_rated")
-    Call<List<MoviesWithRetroFit.MoviesWithRetroFitMovie>> getTopRatedMovies();
+    @GET("/3/movie/top_rated?")
+    Call<MoviesWithRetroFit> getTopRatedMovies(@Query("api_key") String apiKey);
 }

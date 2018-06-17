@@ -112,8 +112,9 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         if (intent.hasExtra(posterStr)) {
             imgPoster=findViewById(R.id.img_movie_poster);
             moviePosterPath=intent.getStringExtra(posterStr);
+            String modifiedPosterPath="https://image.tmdb.org/t/p/w300/"+moviePosterPath;
             Picasso.with(this)
-                    .load(moviePosterPath)
+                    .load(modifiedPosterPath)
                     .error(R.drawable.ic_launcher_background)
                     .into(imgPoster);
         }

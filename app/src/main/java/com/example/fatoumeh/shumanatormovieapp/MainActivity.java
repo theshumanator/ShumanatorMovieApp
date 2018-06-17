@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements //MovieAdapterOnC
                 decideOnSorting(sortValue);
             } else {
                 //by default we sort by popularity if prefs not set already
-                sortByPopularity();
+                fetchMoviesBy(R.id.sort_popular);
             }
         } else {
             tvError.setVisibility(View.VISIBLE);
@@ -118,49 +118,53 @@ public class MainActivity extends AppCompatActivity implements //MovieAdapterOnC
     }
 
 
-    private void sortByPopularity() {
-        setTitle(R.string.sort_popular);
-        //movieAdapter.setMovieData(null);
-        //new FetchMoviesTask().execute(getString(R.string.popular_query));
+
+    private void fetchMoviesBy(int sortValue) {
         movieAdapterWithRetroFit.setMovieData(null);
         MovieRetroFitAPIInterface movieRetroFitAPIInterface=MovieRetroFitClient.getRetrofitInstance()
                 .create(MovieRetroFitAPIInterface.class);
-        final Call<MoviesWithRetroFit> moviesWithRetroFitCall=movieRetroFitAPIInterface
-                .getPopularMovies(getString(R.string.api_key_value));
+        final Call<MoviesWithRetroFit> moviesWithRetroFitCall;
+
+        switch (sortValue) {
+            case R.id.sort_popular:
+                setTitle(R.string.sort_popular);
+                moviesWithRetroFitCall=movieRetroFitAPIInterface.getPopularMovies(getString(R.string.api_key_value));
+                break;
+            case R.id.sort_top_rated:
+                setTitle(R.string.sort_top_rated);
+                moviesWithRetroFitCall=movieRetroFitAPIInterface.getTopRatedMovies(getString(R.string.api_key_value));
+                break;
+            default:
+                moviesWithRetroFitCall=movieRetroFitAPIInterface.getPopularMovies(getString(R.string.api_key_value));
+                break;
+        }
         moviesWithRetroFitCall.enqueue(new Callback<MoviesWithRetroFit>() {
             @Override
             public void onResponse(Call<MoviesWithRetroFit> call, Response<MoviesWithRetroFit> response) {
                 MoviesWithRetroFit moviesWithRetroFit=response.body();
                 ArrayList<MoviesWithRetroFit.MoviesWithRetroFitMovie> movieList=moviesWithRetroFit.getResults();
+                if (movieList.size()<=0) {
+                    tvError.setVisibility(View.VISIBLE);
+                    tvError.setText(getString(R.string.no_movies));
+                } else {
+                    tvError.setVisibility(View.GONE);
+                }
                 movieAdapterWithRetroFit.setMovieData(movieList);
             }
 
             @Override
             public void onFailure(Call<MoviesWithRetroFit> call, Throwable t) {
-                Log.d("onFailure", "FAILED!" + t.getMessage());
+                tvError.setVisibility(View.VISIBLE);
+                tvError.setText(getString(R.string.no_movies));
                 moviesWithRetroFitCall.cancel();
             }
         });
 
     }
 
-    /*
-        TODO: switch adapter to retrofit
-        TODO: create/call the retrofit method and remove async task
-     */
-
-    private void sortByRating() {
-        setTitle(R.string.sort_top_rated);
-        movieAdapter.setMovieData(null);
-        new FetchMoviesTask().execute(getString(R.string.rating_query));
-    }
-
-    /*
-        TODO: switch to adapter to retrofit or keep db adapter separate (?)
-     */
     private void showFavourites() {
         setTitle(R.string.show_favourites);
-        movieAdapter.setMovieData(null);
+        movieAdapterWithRetroFit.setMovieData(null);
         getLoaderManager().initLoader(FAVOURITE_LOADER, null, this);
         getAllFavourites();
     }
@@ -174,10 +178,10 @@ public class MainActivity extends AppCompatActivity implements //MovieAdapterOnC
     private void decideOnSorting(int sortValue) {
         switch (sortValue) {
             case R.id.sort_popular:
-                sortByPopularity();
+                fetchMoviesBy(sortValue);
                 break;
             case R.id.sort_top_rated:
-                sortByRating();
+                fetchMoviesBy(sortValue);
                 break;
             case R.id.show_favourites:
                 showFavourites();
@@ -198,10 +202,10 @@ public class MainActivity extends AppCompatActivity implements //MovieAdapterOnC
             editor.commit();
         }
         if (itemId == R.id.sort_popular) {
-            sortByPopularity();
+            fetchMoviesBy(itemId);
             return true;
         } else if (itemId == R.id.sort_top_rated) {
-            sortByRating();
+            fetchMoviesBy(itemId);
             return true;
         } else if (itemId == R.id.show_favourites) {
             showFavourites();
@@ -225,7 +229,6 @@ public class MainActivity extends AppCompatActivity implements //MovieAdapterOnC
         startActivity(intent);
     }
 
-    //TODO: switch to retrofit arraylist
     private void getAllFavourites() {
         cursor = getContentResolver().query(FavouritesDB.CONTENT_URI, FAVOURITES_PROJECTION, null, null, null);
 
@@ -233,7 +236,9 @@ public class MainActivity extends AppCompatActivity implements //MovieAdapterOnC
             tvError.setText(getString(R.string.no_fav_movies));
             tvError.setVisibility(View.VISIBLE);
         } else {
-            ArrayList<Movies> favMovieList = new ArrayList<Movies>();
+            tvError.setVisibility(View.GONE);
+            ArrayList<MoviesWithRetroFit.MoviesWithRetroFitMovie> favMovieList =
+                    new ArrayList<MoviesWithRetroFit.MoviesWithRetroFitMovie>();
             while (cursor.moveToNext()) {
                 String movieId = cursor.getString(COLUMN_MOVIE_ID);
                 Integer movieIdInt;
@@ -254,12 +259,13 @@ public class MainActivity extends AppCompatActivity implements //MovieAdapterOnC
                 }
                 String movieRelease = cursor.getString(COLUMN_MOVIE_RELEASE_DATE);
                 String moviePoster = cursor.getString(COLUMN_MOVIE_POSTER_PATH);
-                Movies movie = new Movies(movieIdInt, movieTitle, movieOverview, movieRatingDbl, movieRelease, moviePoster);
+                MoviesWithRetroFit.MoviesWithRetroFitMovie movie = new MoviesWithRetroFit.MoviesWithRetroFitMovie
+                        (movieIdInt, movieTitle, movieOverview, movieRatingDbl, movieRelease, moviePoster);
                 favMovieList.add(movie);
             }
 
             if (favMovieList.size() > 0) {
-                movieAdapter.setMovieData(favMovieList);
+                movieAdapterWithRetroFit.setMovieData(favMovieList);
             }
         }
     }
@@ -297,7 +303,9 @@ public class MainActivity extends AppCompatActivity implements //MovieAdapterOnC
             tvError.setText(getString(R.string.no_fav_movies));
             tvError.setVisibility(View.VISIBLE);
         } else {
-            ArrayList<Movies> favMovieList = new ArrayList<Movies>();
+            tvError.setVisibility(View.GONE);
+            ArrayList<MoviesWithRetroFit.MoviesWithRetroFitMovie> favMovieList =
+                    new ArrayList<MoviesWithRetroFit.MoviesWithRetroFitMovie>();
             while (cursor.moveToNext()) {
                 String movieId = cursor.getString(COLUMN_MOVIE_ID);
                 Integer movieIdInt;
@@ -318,12 +326,13 @@ public class MainActivity extends AppCompatActivity implements //MovieAdapterOnC
                 }
                 String movieRelease = cursor.getString(COLUMN_MOVIE_RELEASE_DATE);
                 String moviePoster = cursor.getString(COLUMN_MOVIE_POSTER_PATH);
-                Movies movie = new Movies(movieIdInt, movieTitle, movieOverview, movieRatingDbl, movieRelease, moviePoster);
+                MoviesWithRetroFit.MoviesWithRetroFitMovie movie = new MoviesWithRetroFit.MoviesWithRetroFitMovie
+                        (movieIdInt, movieTitle, movieOverview, movieRatingDbl, movieRelease, moviePoster);
                 favMovieList.add(movie);
             }
 
             if (favMovieList.size() > 0) {
-                movieAdapter.setMovieData(favMovieList);
+                movieAdapterWithRetroFit.setMovieData(favMovieList);
             }
         }
         if (scrollPos!=RecyclerView.NO_POSITION) {
@@ -336,44 +345,4 @@ public class MainActivity extends AppCompatActivity implements //MovieAdapterOnC
         cursor = null;
     }
 
-    public class FetchMoviesTask extends AsyncTask<String, Void, ArrayList<Movies>> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            pbProgress.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected ArrayList<Movies> doInBackground(String... queryTypes) {
-            ArrayList<Movies> moviesArrayList;
-            if (queryTypes.length == 0) {
-                //something isn't right
-                Log.e(LOG_TAG, getString(R.string.incorrect_query));
-                return null;
-            } else {
-                String queryType = queryTypes[0];
-                moviesArrayList = QueryUtils.queryMovies(queryType, getApplicationContext());
-            }
-            return moviesArrayList;
-        }
-
-        @Override
-        protected void onPostExecute(ArrayList<Movies> movies) {
-            pbProgress.setVisibility(View.GONE);
-            if (movies != null) {
-                tvError.setVisibility(View.GONE);
-                rvMovies.setVisibility(View.VISIBLE);
-                movieAdapter.setMovieData(movies);
-                if (scrollPos!=RecyclerView.NO_POSITION) {
-                    gridLayoutManager.scrollToPosition(scrollPos);
-                }
-            } else {
-                tvError.setText(getString(R.string.no_movies));
-                tvError.setVisibility(View.VISIBLE);
-                rvMovies.setVisibility(View.GONE);
-                super.onPostExecute(movies);
-            }
-        }
-    }
 }

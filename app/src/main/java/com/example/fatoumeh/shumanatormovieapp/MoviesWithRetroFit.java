@@ -55,7 +55,7 @@ public class MoviesWithRetroFit {
 
 
 
-public class MoviesWithRetroFitMovie {
+public static class MoviesWithRetroFitMovie {
 
     @SerializedName("vote_count")
     @Expose
@@ -99,6 +99,16 @@ public class MoviesWithRetroFitMovie {
     @SerializedName("release_date")
     @Expose
     private String releaseDate;
+
+    public MoviesWithRetroFitMovie(Integer movieIdInt, String movieTitle, String movieOverview,
+                                   double movieRatingDbl, String movieRelease, String moviePoster) {
+        id=movieIdInt;
+        title=movieTitle;
+        overview=movieOverview;
+        voteAverage=movieRatingDbl;
+        releaseDate=movieRelease;
+        posterPath=moviePoster;
+    }
 
     public Integer getVoteCount() {
         return voteCount;
